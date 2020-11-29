@@ -1,9 +1,19 @@
 import React from "react";
-import {Box} from "@material-ui/core";
+import {Box, Typography} from "@material-ui/core";
+import DebateListContainer from "./DebateListContainer";
 
 const Main = () => {
   return (
-    <Box display="flex"></Box>
+    <Box display="flex">
+      {/*<Box>*/}
+      {/*  <Typography component="h2">Hot Debate List</Typography>*/}
+      {/*  <DebateListContainer />*/}
+      {/*</Box>*/}
+      <Box>
+        <Typography component="h2">Recent Debate List</Typography>
+        <DebateListContainer />
+      </Box>
+    </Box>
   )
 }
 

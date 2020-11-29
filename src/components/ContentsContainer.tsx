@@ -3,7 +3,7 @@ import Contents from "./Contents";
 
 const ContentsContainer = () => {
   return (
-    <Contents></Contents>
+    <Contents />
   )
 }
 

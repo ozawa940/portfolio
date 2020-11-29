@@ -1,9 +1,17 @@
 import React from "react";
-import {Box} from "@material-ui/core";
+import {Box, List, ListItem, ListItemText, Typography} from "@material-ui/core";
 
 const Debate = () => {
   return (
-    <Box display="flex"></Box>
+    <Box display="flex">
+      <List>
+        <ListItem alignItems="flex-start">
+          <ListItemText>
+            <Typography></Typography>
+          </ListItemText>
+        </ListItem>
+      </List>
+    </Box>
   )
 }
 
