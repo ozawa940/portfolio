@@ -1,11 +1,10 @@
 import React, {useEffect} from "react";
 import Main from "./Main";
-import {useHistory, useLocation} from "react-router-dom"
+import {useLocation} from "react-router-dom"
 import {useDispatch} from "react-redux";
 import {GetRecentDebateList} from "../../store/debate/DebateActions";
 
 const MainContainer = () => {
-  const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -13,7 +12,7 @@ const MainContainer = () => {
     dispatch(GetRecentDebateList())
   }
 
-  useEffect(initialLoad, [location.pathname]);
+  useEffect(initialLoad, [location.pathname, dispatch]);
 
   return (
     <Main />

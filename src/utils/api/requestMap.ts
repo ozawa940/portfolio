@@ -1,6 +1,7 @@
 import GlobalConfig from '../../config'
 import {AxiosRequestConfig, Method} from "axios";
 import {getRequestHandler} from "./requestHandler";
+import {GetDebateMessageListParamType} from "./requestTypes";
 
 const getConfig = (url: string, method: Method): AxiosRequestConfig => {
   return {
@@ -16,7 +17,10 @@ const requestMap = {
     return getRequestHandler(getConfig("/thread/recent/thread-list", "get"));
   },
   getDebateMessageList: (threadNo: number) => {
-    return getRequestHandler(getConfig(`/chat/message-list?thread=${threadNo}`, "get"))
+    return getRequestHandler(getConfig(`/chat/message-list?threadNo=${threadNo}`, "get"))
+  },
+  getDebateUserList: (param: GetDebateMessageListParamType) => {
+    return getRequestHandler(getConfig("/thread/username-list", "post"), param)
   }
 };
 

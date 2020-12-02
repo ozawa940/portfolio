@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {GetDebateMessageList, GetRecentDebateList} from "./DebateActions";
-
+import createSpacing from "@material-ui/core/styles/createSpacing";
 
 export type MessageInfo = {
   messageNo: number,
@@ -16,6 +16,11 @@ export type MessageInfo = {
   updateTimestamp?: string
 }
 
+export type UserInfo = {
+  userNo: number,
+  userName: string
+}
+
 export type DebateInfo = {
   threadNo: number,
   threadName: string,
@@ -29,12 +34,14 @@ export type DebateInfo = {
 export type DebateStateType = {
   recentDebateList: DebateInfo[],
   debateMessageList: MessageInfo[],
+  userNoList: UserInfo[],
   selectedThreadNo: number
 }
 
 const initialState: DebateStateType = {
   recentDebateList: [],
   debateMessageList: [],
+  userNoList: [],
   selectedThreadNo: 0
 }
 
@@ -70,7 +77,7 @@ export const DebateSlice = createSlice({
           }
         })
         .addCase(GetDebateMessageList.fulfilled, (state, action) => {
-          const debateMessageList = action.payload.messageList.map((message: any) => ({
+          const debateMessageList = action.payload.resMessage.messageList.map((message: any) => ({
             messageNo: message.messageNo,
             threadNo: message.threadNo,
             userNo: message.userNo,
@@ -84,9 +91,19 @@ export const DebateSlice = createSlice({
             updateTimestamp: message.updateTimestamp
           }))
 
+
+          let userNoList: UserInfo[] = []
+          Object.keys(action.payload.resUser).forEach(key => {
+            userNoList.push({
+              userName: action.payload.resUser[key],
+              userNo: Number(key)
+            })
+          })
+
           return {
             ...state,
-            debateMessageList: debateMessageList
+            debateMessageList: debateMessageList,
+            userNoList: userNoList
           }
         })
         .addCase(GetDebateMessageList.rejected, (state, action) => {

@@ -1,5 +1,6 @@
 export type GetDebateMessageListParamType = {
-  threadNo: number
+  threadNo: number,
+  userNoList: number[]
 }
 
 
