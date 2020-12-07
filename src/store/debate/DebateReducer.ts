@@ -1,6 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {GetDebateMessageList, GetRecentDebateList} from "./DebateActions";
-import createSpacing from "@material-ui/core/styles/createSpacing";
 
 export type MessageInfo = {
   messageNo: number,
@@ -35,14 +34,14 @@ export type DebateStateType = {
   recentDebateList: DebateInfo[],
   debateMessageList: MessageInfo[],
   userNoList: UserInfo[],
-  selectedThreadNo: number
+  selectedThreadNo: number,
 }
 
 const initialState: DebateStateType = {
   recentDebateList: [],
   debateMessageList: [],
   userNoList: [],
-  selectedThreadNo: 0
+  selectedThreadNo: 0,
 }
 
 export const DebateSlice = createSlice({
@@ -52,6 +51,10 @@ export const DebateSlice = createSlice({
     setSelectedThreadNo: (state, action) => ({
       ...state,
       selectedThreadNo: action.payload
+    }),
+    addMessageList: (state, action) => ({
+      ...state,
+      debateMessageList: state.debateMessageList.concat(action.payload).sort((n1, n2) => n1.messageNo - n2.messageNo)
     })
   },
   extraReducers: builder => {

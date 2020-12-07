@@ -4,3 +4,9 @@ export type GetDebateMessageListParamType = {
 }
 
 
+export type PostMessageToThreadParamType = {
+  threadNo: number,
+  message: string,
+  messageType: string,
+  accessToken: string
+}
