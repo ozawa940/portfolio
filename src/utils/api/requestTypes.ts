@@ -10,3 +10,14 @@ export type PostMessageToThreadParamType = {
   messageType: string,
   accessToken: string
 }
+
+export type GetAccessTokenParamType = {
+  authId: string,
+  code: string
+}
+
+export type CreateUserParamType = {
+  userId: string,
+  userPassword: string,
+  userName: string
+}

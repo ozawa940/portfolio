@@ -1,5 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import requestMap from "../../utils/api/requestMap";
+import {threadId} from "worker_threads";
+import {GetDebateMessageListParamType} from "../../utils/api/requestTypes";
 
 
 export const GetRecentDebateList = createAsyncThunk("debate/recentDebateList", async () => {
@@ -30,6 +32,19 @@ export const GetDebateMessageList = createAsyncThunk("debate/messageList", async
       resUser = await requestMap.getDebateUserList(param)
     }
     return {resUser: resUser?.data, resMessage: resMessage.data}
+  } catch (e) {
+    if (e.response) {
+      throw new Error(e.response.data.code);
+    } else {
+      throw new Error("Cannot connect server");
+    }
+  }
+})
+
+export const GetDebateUserNoList = createAsyncThunk("debate/userNoList", async (param: GetDebateMessageListParamType) => {
+  try {
+    const resUser = await requestMap.getDebateUserList(param)
+    return resUser.data
   } catch (e) {
     if (e.response) {
       throw new Error(e.response.data.code);

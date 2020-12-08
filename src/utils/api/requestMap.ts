@@ -1,7 +1,12 @@
 import GlobalConfig from '../../config'
 import {AxiosRequestConfig, Method} from "axios";
 import {getRequestHandler} from "./requestHandler";
-import {GetDebateMessageListParamType, PostMessageToThreadParamType} from "./requestTypes";
+import {
+  CreateUserParamType,
+  GetAccessTokenParamType,
+  GetDebateMessageListParamType,
+  PostMessageToThreadParamType
+} from "./requestTypes";
 
 const getConfig = (url: string, method: Method): AxiosRequestConfig => {
   return {
@@ -24,6 +29,21 @@ const requestMap = {
   },
   postMessageToThread: (param: PostMessageToThreadParamType) => {
     return getRequestHandler(getConfig("/chat/message", "post"), param)
+  },
+  getThreadInfo: (threadNo: number) => {
+    return getRequestHandler(getConfig(`/thread/info?threadNo=${threadNo}`, "get"))
+  },
+  getAccessToken: (param: GetAccessTokenParamType) => {
+    return getRequestHandler(getConfig("/token", "post"), param)
+  },
+  checkAccessToken: (accessToken: string) => {
+    return getRequestHandler(getConfig("/token/check-valid", "get"), null, {accessToken: accessToken})
+  },
+  refreshAccessToken: (refreshToken: string) => {
+    return getRequestHandler(getConfig("/token/refresh", "get"), null, {refreshToken: refreshToken})
+  },
+  createUser: (param: CreateUserParamType) => {
+    return getRequestHandler(getConfig("/user", "post"), param)
   }
 };
 

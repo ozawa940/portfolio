@@ -1,13 +1,12 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Debate, {DebateProps} from "./Debate";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import { useLocation } from 'react-router-dom'
-import {DebateSlice} from "../../store/debate/DebateReducer";
-import {GetDebateMessageList} from "../../store/debate/DebateActions";
+import {DebateSlice, UserInfo} from "../../store/debate/DebateReducer";
+import {GetDebateMessageList, GetDebateUserNoList} from "../../store/debate/DebateActions";
 import requestMap from "../../utils/api/requestMap";
 import {PostMessageToThreadParamType} from "../../utils/api/requestTypes";
-import {Client} from "@stomp/stompjs";
 import websocketMap from "../../utils/api/websocketMap";
 
 const DebateContainer = () => {
@@ -15,7 +14,10 @@ const DebateContainer = () => {
   const dispatch = useDispatch()
 
   const debateState: any = useSelector<RootState>(state => {
-    return {...state.debateReducer}
+    return {
+      ...state.debateReducer,
+      accessToken: state.tokenReducer.accessToken
+    }
   });
 
   const debateParam: DebateProps = {
@@ -26,12 +28,12 @@ const DebateContainer = () => {
         threadNo: debateState.selectedThreadNo,
         message: message,
         messageType: "TEXT",
-        accessToken: ""
+        accessToken: debateState.accessToken
       }
       requestMap.postMessageToThread(param)
-    }
+    },
+    debateInfo: debateState.selectedThreadInfo
   }
-
 
   const initialLoad = () => {
     const regex = /\/debate\/(?<threadNo>[0-9]+)/
@@ -40,11 +42,13 @@ const DebateContainer = () => {
       const threadNo = Number(groups.threadNo)
       dispatch(DebateSlice.actions.setSelectedThreadNo(threadNo))
       dispatch(GetDebateMessageList(threadNo))
+      requestMap.getThreadInfo(threadNo).then((res) => {
+        dispatch(DebateSlice.actions.setThreadInfo(res.data))
+      })
 
       const client = websocketMap.connectWebsocket(() => {})
 
       const connectWebsocketCallback = () => {
-        // @ts-ignore
         client.subscribe(`/poll/room/${threadNo}/message`, (msg: any) => {
           const messageList = JSON.parse(msg.body)
           if (messageList.length > 0) {
@@ -72,8 +76,19 @@ const DebateContainer = () => {
     }
   }
 
+  const searchParam = {
+    userNoList: debateState.searchUserNoList,
+    threadNo: debateState.selectedThreadNo
+  }
+  const searchFlg = searchParam.userNoList.length > 0
+  const getSearchUserNoList = () => {
+     if (searchFlg) {
+       dispatch(GetDebateUserNoList(searchParam))
+     }
+  }
 
   useEffect(initialLoad, [location.pathname, dispatch])
+  useEffect(getSearchUserNoList, [searchFlg, dispatch])
 
   return (
     <Debate {...debateParam} />

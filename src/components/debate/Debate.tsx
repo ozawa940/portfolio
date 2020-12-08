@@ -1,8 +1,9 @@
 import React, {ChangeEvent, CSSProperties, useEffect, useRef, useState} from "react";
 import {Box, Button, ListItem, ListItemText, TextField, Typography} from "@material-ui/core";
-import {MessageInfo, UserInfo} from "../../store/debate/DebateReducer";
+import {DebateInfo, MessageInfo, UserInfo} from "../../store/debate/DebateReducer";
 import {FixedSizeList, ListChildComponentProps} from "react-window"
 import SendIcon from '@material-ui/icons/Send';
+import {makeStyles} from "@material-ui/core/styles";
 
 export type DebateMessageProps = {
   message: MessageInfo,
@@ -25,6 +26,7 @@ const DebateMessage = (props: DebateMessageProps) => {
 }
 
 export type DebateProps = {
+  debateInfo: DebateInfo,
   messageList: MessageInfo[],
   userNoList: UserInfo[],
   sendMessage: (message: string) => void
@@ -45,17 +47,28 @@ const renderRow = (props: ListChildComponentProps) => {
   )
 }
 
+const useStyle = makeStyles(({
+  threadName: {
+    fontSize: "2em",
+  },
+  threadHeader: {
+    backgroundColor: "#81c784",
+    paddingBottom: "2em",
+    justifyContent: "center"
+  }
+}))
+
 const Debate = (props: DebateProps) => {
+  const classes =useStyle();
 
   const ref = useRef<FixedSizeList>(null)
-  const [initFlg, setInitFlg] = useState(true)
+  const messageSize = props.messageList.length
   useEffect(() => {
-    if (initFlg) {
+    if (messageSize) {
       // TODO: set scroll index
-      ref.current?.scrollToItem(props.messageList.length);
-      setInitFlg(false);
+      ref.current?.scrollToItem(messageSize);
     }
-  }, [initFlg, ref])
+  }, [messageSize, ref])
 
   const [message, setMessage] = useState("")
   const changeMessageHandler = (event: ChangeEvent<any>) => {
@@ -64,6 +77,9 @@ const Debate = (props: DebateProps) => {
 
   return (
     <Box display="flex" flexDirection="column">
+      <Box display="flex" className={classes.threadHeader}>
+        <Typography className={classes.threadName}>{props.debateInfo.threadName}</Typography>
+      </Box>
       <FixedSizeList
         itemSize={80}
         height={600}
@@ -78,6 +94,7 @@ const Debate = (props: DebateProps) => {
         label="Input message"
         multiline
         variant="filled"
+        value={message}
         onChange={changeMessageHandler}
       />
       <Button
