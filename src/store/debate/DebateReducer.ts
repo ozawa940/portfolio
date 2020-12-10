@@ -108,7 +108,8 @@ export const DebateSlice = createSlice({
           }
         })
         .addCase(GetDebateMessageList.fulfilled, (state, action) => {
-          const debateMessageList = action.payload.resMessage.messageList.map((message: any) => ({
+          let debateMessageList: MessageInfo[] = []
+          debateMessageList = action.payload.resMessage.messageList.map((message: any) => ({
             messageNo: message.messageNo,
             threadNo: message.threadNo,
             userNo: message.userNo,
@@ -124,12 +125,14 @@ export const DebateSlice = createSlice({
 
 
           let userNoList: UserInfo[] = []
-          Object.keys(action.payload.resUser).forEach(key => {
-            userNoList.push({
-              userName: action.payload.resUser[key],
-              userNo: Number(key)
+          if (action.payload.resUser) {
+            Object.keys(action.payload.resUser).forEach(key => {
+              userNoList.push({
+                userName: action.payload.resUser[key],
+                userNo: Number(key)
+              })
             })
-          })
+          }
 
           return {
             ...state,

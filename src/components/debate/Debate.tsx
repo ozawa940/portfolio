@@ -4,6 +4,7 @@ import {DebateInfo, MessageInfo, UserInfo} from "../../store/debate/DebateReduce
 import {FixedSizeList, ListChildComponentProps} from "react-window"
 import SendIcon from '@material-ui/icons/Send';
 import {makeStyles} from "@material-ui/core/styles";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 export type DebateMessageProps = {
   message: MessageInfo,
@@ -29,7 +30,8 @@ export type DebateProps = {
   debateInfo: DebateInfo,
   messageList: MessageInfo[],
   userNoList: UserInfo[],
-  sendMessage: (message: string) => void
+  sendMessage: (message: string) => void,
+  goToThreadList: () => void
 }
 
 const renderRow = (props: ListChildComponentProps) => {
@@ -77,6 +79,7 @@ const Debate = (props: DebateProps) => {
 
   return (
     <Box display="flex" flexDirection="column">
+      <Button onClick={props.goToThreadList} startIcon={<ArrowBackIcon />}>Go to MainPage</Button>
       <Box display="flex" className={classes.threadHeader}>
         <Typography className={classes.threadName}>{props.debateInfo.threadName}</Typography>
       </Box>

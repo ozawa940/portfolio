@@ -21,3 +21,9 @@ export type CreateUserParamType = {
   userPassword: string,
   userName: string
 }
+
+export type CreateThreadParamType = {
+  threadName: string,
+  threadType: string,
+  threadStatus: string
+}

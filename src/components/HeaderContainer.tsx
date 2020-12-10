@@ -7,14 +7,17 @@ import requestMap from "../utils/api/requestMap";
 import {useDispatch, useSelector} from "react-redux";
 import {TokenSlice} from "../store/token/TokenReducer";
 import {RootState} from "../store";
+import {ErrorDialog} from "./common/ErrorDialog";
+import {CommonSlice} from "../store/common/CommonReducer";
 
 const HeaderContainer = () => {
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
-  const tokenState: any = useSelector<RootState>(state => {
+  const headerState: any = useSelector<RootState>(state => {
     return {
-      ...state.tokenReducer
+      ...state.tokenReducer,
+      ...state.commonReducer
     }
   })
   const [refreshFlg, setRefreshFlg] = useState(false);
@@ -40,10 +43,10 @@ const HeaderContainer = () => {
   const checkRefreshFlg = () => {
     if (refreshFlg) {
       removeCookie("refreshToken")
-      if (isBlank(tokenState.refreshToken)) {
+      if (isBlank(headerState.refreshToken)) {
         dispatch(TokenSlice.actions.clearToken)
       }
-      requestMap.refreshAccessToken(tokenState.refreshToken).then((res) => {
+      requestMap.refreshAccessToken(headerState.refreshToken).then((res) => {
         const token = {
           accessToken: res.data.accessToken,
           refreshToken: res.data.refreshToken
@@ -63,7 +66,7 @@ const HeaderContainer = () => {
   useEffect(checkRefreshFlg, [refreshFlg])
 
   const headerParam = {
-    isLogin: isNotBlank(tokenState.accessToken),
+    isLogin: isNotBlank(headerState.accessToken),
     isLoginPath: isLoginPath(location.pathname),
     goToLoginPageHandler: () => {
       history.push("/login");
@@ -73,8 +76,20 @@ const HeaderContainer = () => {
     }
   }
 
+  const errorDialogParam = {
+    showErrorFlg: headerState.showErrorFlg,
+    errorTitle: headerState.errorTitle,
+    errorMsg: headerState.errorMsg,
+    closeHandler: () => {
+      dispatch(CommonSlice.actions.clearError())
+    }
+  };
+
   return (
-    <Header {...headerParam}></Header>
+    <React.Fragment>
+      <Header {...headerParam}></Header>
+      <ErrorDialog {...errorDialogParam} />
+    </React.Fragment>
   )
 }
 

@@ -2,6 +2,7 @@ import GlobalConfig from '../../config'
 import {AxiosRequestConfig, Method} from "axios";
 import {getRequestHandler} from "./requestHandler";
 import {
+  CreateThreadParamType,
   CreateUserParamType,
   GetAccessTokenParamType,
   GetDebateMessageListParamType,
@@ -44,6 +45,9 @@ const requestMap = {
   },
   createUser: (param: CreateUserParamType) => {
     return getRequestHandler(getConfig("/user", "post"), param)
+  },
+  createThread: (param: CreateThreadParamType) => {
+    return getRequestHandler(getConfig("/thread", "post"), param)
   }
 };
 

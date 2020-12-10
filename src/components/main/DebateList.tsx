@@ -33,7 +33,7 @@ export type DebateListProps = {
 const DebateList = (props: DebateListProps) => {
 
   return (
-    <Box>
+    <Box className={DebateStyle.debateList}>
       {
         props.debateList.map((card) => (
           <DebateCard debateCard={card} goToDebateHandler={props.goToDebateHandler}  />

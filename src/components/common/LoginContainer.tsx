@@ -5,6 +5,7 @@ import requestMap from "../../utils/api/requestMap";
 import {useDispatch} from "react-redux";
 import {TokenSlice} from "../../store/token/TokenReducer";
 import {useCookies} from "react-cookie";
+import {CommonSlice} from "../../store/common/CommonReducer";
 
 const LoginContainer = () => {
   const history = useHistory();
@@ -26,9 +27,14 @@ const LoginContainer = () => {
         dispatch(TokenSlice.actions.setToken(token))
         setCookie("accessToken", token.accessToken, { path: "/", sameSite: true });
         setCookie("refreshToken", token.accessToken, { path: "/", sameSite: true });
-        // TODO: move home
+        history.push("/")
       }).catch((e) => {
-        // TODO: alert
+        const error = {
+          showErrorFlg: true,
+          errorTitle: e.response.data.code,
+          errorMsg: e.response.data.message
+        }
+        dispatch(CommonSlice.actions.setError(error))
       })
     },
     goToSignUpHandler: () => {
@@ -51,9 +57,14 @@ const LoginContainer = () => {
         dispatch(TokenSlice.actions.setToken(token))
         setCookie("accessToken", token.accessToken, { path: "/", sameSite: true });
         setCookie("refreshToken", token.accessToken, { path: "/", sameSite: true });
-        // TODO: move home
+        history.push("/")
       }).catch((e) => {
-        // TODO: alert
+        const error = {
+          showErrorFlg: true,
+          errorTitle: e.response.data.code,
+          errorMsg: e.response.data.message
+        }
+        dispatch(CommonSlice.actions.setError(error))
       })
     }
   }

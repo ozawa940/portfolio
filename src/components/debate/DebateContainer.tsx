@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Debate, {DebateProps} from "./Debate";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
-import { useLocation } from 'react-router-dom'
+import {useHistory, useLocation} from 'react-router-dom'
 import {DebateSlice, UserInfo} from "../../store/debate/DebateReducer";
 import {GetDebateMessageList, GetDebateUserNoList} from "../../store/debate/DebateActions";
 import requestMap from "../../utils/api/requestMap";
@@ -10,8 +10,9 @@ import {PostMessageToThreadParamType} from "../../utils/api/requestTypes";
 import websocketMap from "../../utils/api/websocketMap";
 
 const DebateContainer = () => {
-  const location = useLocation()
-  const dispatch = useDispatch()
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const debateState: any = useSelector<RootState>(state => {
     return {
@@ -32,7 +33,10 @@ const DebateContainer = () => {
       }
       requestMap.postMessageToThread(param)
     },
-    debateInfo: debateState.selectedThreadInfo
+    debateInfo: debateState.selectedThreadInfo,
+    goToThreadList: () => {
+      history.push("/")
+    }
   }
 
   const initialLoad = () => {
