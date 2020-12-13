@@ -1,3 +1,33 @@
-.App {
-  text-align: center;
+.app {
+  background: white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.hidden {
+  display: none;
+}
+
+.contents {
+  margin-top: 6em;
+  justify-content: center;
+
+  &Box {
+    width: 50%;
+  }
+
+  input {
+    background: lightgray;
+  }
+}
+
+.main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
