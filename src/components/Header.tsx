@@ -1,10 +1,11 @@
-import React from "react";
-import {AppBar, IconButton, Typography} from "@material-ui/core";
+import React, {useState} from "react";
+import {AppBar, IconButton, ListItem, ListItemText, Menu, MenuItem, Typography} from "@material-ui/core";
 import app from "../style/App.module.scss";
 import SettingsIcon from '@material-ui/icons/Settings';
 import {makeStyles} from "@material-ui/core/styles";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import HomeIcon from '@material-ui/icons/Home';
 import clsx from "clsx";
 
 const useStyle = makeStyles(({
@@ -17,6 +18,7 @@ const useStyle = makeStyles(({
   }
 }))
 
+
 type HeaderProps = {
   isLogin: boolean,
   isLoginPath: boolean,
@@ -26,17 +28,19 @@ type HeaderProps = {
 
 const Header = (props: HeaderProps) => {
   const classes = useStyle();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
   return (
     <AppBar>
       <div className={app.header}>
         <div></div>
         <div>
           <Typography variant="h1" className={classes.title} onClick={props.goToMainPageHandler} >
-            Debate
+            Portfolio
           </Typography>
         </div>
         <div className={clsx(!props.isLogin && app.hidden)}>
-          <IconButton>
+          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
             <SettingsIcon className={classes.icon} />
           </IconButton>
         </div>
@@ -50,6 +54,16 @@ const Header = (props: HeaderProps) => {
             <ArrowBackIcon className={classes.icon} />
           </IconButton>
         </div>
+        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+          <MenuItem>
+            <MenuItem>
+              <ListItem>
+                <HomeIcon />
+                <ListItemText primary="アカウント情報" />
+              </ListItem>
+            </MenuItem>
+          </MenuItem>
+        </Menu>
       </div>
     </AppBar>
   )
