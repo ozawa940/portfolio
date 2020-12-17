@@ -30,13 +30,19 @@ export type DebateInfo = {
   threadType: string
 }
 
+export type WebSocketInfo = {
+  id: any,
+  url: string
+}
+
 export type DebateStateType = {
   recentDebateList: DebateInfo[],
   debateMessageList: MessageInfo[],
   userNoList: UserInfo[],
   selectedThreadInfo: DebateInfo,
   selectedThreadNo: number,
-  searchUserNoList: number[]
+  searchUserNoList: number[],
+  webSocketList: WebSocketInfo[]
 }
 
 const initialState: DebateStateType = {
@@ -45,7 +51,8 @@ const initialState: DebateStateType = {
   userNoList: [],
   selectedThreadInfo: {} as DebateInfo,
   selectedThreadNo: 0,
-  searchUserNoList: []
+  searchUserNoList: [],
+  webSocketList: []
 }
 
 export const DebateSlice = createSlice({
@@ -83,7 +90,28 @@ export const DebateSlice = createSlice({
         debateMessageList: debateMessageList,
         searchUserNoList: searchUserNoList
       }
-    }
+    },
+    addWebSocket: (state, action) => {
+      let webSocketList: WebSocketInfo[] = state.webSocketList.concat([])
+      if (state.webSocketList.filter(sock => sock.url === action.payload.url).length === 0) {
+        webSocketList = state.webSocketList.concat([action.payload])
+      }
+      return {
+        ...state,
+        webSocketList: webSocketList
+      }
+    },
+    removeWebSocket: (state, action) => {
+      let webSocketList = state.webSocketList.filter(sock => sock.url !== action.payload.url);
+      return {
+        ...state,
+        webSocketList: webSocketList
+      }
+    },
+    clearWebSocket: (state) => ({
+      ...state,
+      webSocketList: []
+    })
   },
   extraReducers: builder => {
       builder.addCase(GetRecentDebateList.fulfilled, (state, action) => {

@@ -3,11 +3,12 @@ import Debate, {DebateProps} from "./Debate";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useHistory, useLocation} from 'react-router-dom'
-import {DebateSlice, UserInfo} from "../../store/debate/DebateReducer";
+import {DebateSlice, UserInfo, WebSocketInfo} from "../../store/debate/DebateReducer";
 import {GetDebateMessageList, GetDebateUserNoList} from "../../store/debate/DebateActions";
 import requestMap from "../../utils/api/requestMap";
 import {PostMessageToThreadParamType} from "../../utils/api/requestTypes";
 import websocketMap from "../../utils/api/websocketMap";
+import {CommonSlice} from "../../store/common/CommonReducer";
 
 const DebateContainer = () => {
   const location = useLocation();
@@ -50,10 +51,12 @@ const DebateContainer = () => {
         dispatch(DebateSlice.actions.setThreadInfo(res.data))
       })
 
-      const client = websocketMap.connectWebsocket(() => {})
 
-      const connectWebsocketCallback = () => {
-        client.subscribe(`/poll/room/${threadNo}/message`, (msg: any) => {
+      const dist = `/poll/room/${threadNo}/message`
+      let client = window.WebSocketClient
+
+      const connectWebsocketCallback = async () => {
+        const subscribe = await client.subscribe(dist, (msg: any) => {
           const messageList = JSON.parse(msg.body)
           if (messageList.length > 0) {
             const debateMessageList = messageList.map((message: any) => ({
@@ -71,12 +74,24 @@ const DebateContainer = () => {
             }))
             dispatch(DebateSlice.actions.addMessageList(debateMessageList))
           }
-        })
+        });
+        const newSocket = { id : subscribe.id, url: dist}
+        dispatch(DebateSlice.actions.addWebSocket(newSocket))
       }
 
-      websocketMap.updateConfig(client, connectWebsocketCallback)
+      if (client){
+          client.deactivate().then(() => {
+            dispatch(DebateSlice.actions.clearWebSocket())
+            websocketMap.updateConfig(client, connectWebsocketCallback)
+            client.activate()
+          })
+      } else {
+        window.WebSocketClient = websocketMap.connectWebsocket(() => {})
+        client = window.WebSocketClient
+        websocketMap.updateConfig(client, connectWebsocketCallback)
+        client.activate()
+      }
 
-      client.activate()
     }
   }
 
