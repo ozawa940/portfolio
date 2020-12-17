@@ -39,12 +39,13 @@
 .debateList {
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
 .debateCard {
   display: flex;
   flex-direction: column;
-  margin-right: 1em;
+  margin: 1em;
 }
 

@@ -60,7 +60,6 @@ const useStyle = makeStyles(({
   },
   threadView: {
     width: "100% !important",
-    height: "100% !important"
   },
   thread: {
     width: "80%",
@@ -93,7 +92,7 @@ const Debate = (props: DebateProps) => {
       </Box>
       <FixedSizeList
         itemSize={80}
-        height={100}
+        height={350}
         itemCount={props.messageList.length}
         width={100}
         itemData={props}
