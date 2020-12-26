@@ -13,12 +13,12 @@ const DebateCard = (props: DebateCardProps) => {
   return (
     <Card className={DebateStyle.debateCard}>
       <CardContent>
-        <Typography component="h2">{ props.debateCard.threadName }</Typography>
-        <Typography component="h4">{ props.debateCard.threadDescription }</Typography>
+        <Typography component="h2">{ props.debateCard.debateName }</Typography>
+        <Typography component="h4">{ props.debateCard.debateDescribe}</Typography>
       </CardContent>
       <CardActions>
         <Button onClick={() => props.goToDebateHandler(props.debateCard.threadNo)}>
-          Check Debate
+          ルームに入る
         </Button>
       </CardActions>
     </Card>

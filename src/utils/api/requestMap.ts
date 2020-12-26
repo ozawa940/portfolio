@@ -2,7 +2,7 @@ import GlobalConfig from '../../config'
 import {AxiosRequestConfig, Method} from "axios";
 import {getRequestHandler} from "./requestHandler";
 import {
-  CreateThreadParamType,
+  CreateDebateParamType,
   CreateUserParamType,
   GetAccessTokenParamType,
   GetDebateMessageListParamType,
@@ -20,10 +20,10 @@ const getConfig = (url: string, method: Method): AxiosRequestConfig => {
 
 const requestMap = {
   getRecentDebateList: () => {
-    return getRequestHandler(getConfig("/thread/recent/thread-list", "get"));
+    return getRequestHandler(getConfig("/debate/recent/debate-list", "get"));
   },
-  getDebateMessageList: (threadNo: number) => {
-    return getRequestHandler(getConfig(`/chat/message-list?threadNo=${threadNo}`, "get"))
+  getDebateMessageList: (debateNo: number) => {
+    return getRequestHandler(getConfig(`/chat/message-list?debateNo=${debateNo}`, "get"))
   },
   getDebateUserList: (param: GetDebateMessageListParamType) => {
     return getRequestHandler(getConfig("/thread/username-list", "post"), param)
@@ -31,8 +31,8 @@ const requestMap = {
   postMessageToThread: (param: PostMessageToThreadParamType) => {
     return getRequestHandler(getConfig("/chat/message", "post"), param)
   },
-  getThreadInfo: (threadNo: number) => {
-    return getRequestHandler(getConfig(`/thread/info?threadNo=${threadNo}`, "get"))
+  getDebateInfo: (debateNo: number) => {
+    return getRequestHandler(getConfig(`/debate?debateNo=${debateNo}`, "get"))
   },
   getAccessToken: (param: GetAccessTokenParamType) => {
     return getRequestHandler(getConfig("/token", "post"), param)
@@ -46,8 +46,8 @@ const requestMap = {
   createUser: (param: CreateUserParamType) => {
     return getRequestHandler(getConfig("/user", "post"), param)
   },
-  createThread: (param: CreateThreadParamType) => {
-    return getRequestHandler(getConfig("/thread", "post"), param)
+  createDebate: (param: CreateDebateParamType) => {
+    return getRequestHandler(getConfig("/debate", "post"), param)
   }
 };
 

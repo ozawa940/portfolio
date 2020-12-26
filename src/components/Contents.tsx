@@ -6,6 +6,7 @@ import ChatContainer from "./chat/ChatContainer";
 import DebateContainer from "./debate/DebateContainer";
 import {Box} from "@material-ui/core";
 import app from "../style/App.module.scss"
+import RoomContainer from "./room/RoomContainer";
 
 const Contents = () => {
   return (
@@ -16,6 +17,9 @@ const Contents = () => {
         </Route>
         <Route path="/chat">
           <ChatContainer />
+        </Route>
+        <Route path="/room">
+          <RoomContainer />
         </Route>
         <Route path="/debate">
           <DebateContainer />

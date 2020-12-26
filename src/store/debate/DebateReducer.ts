@@ -21,13 +21,17 @@ export type UserInfo = {
 }
 
 export type DebateInfo = {
+  debateNo: number,
+  debateRootNo: number
+  debateName: string,
+  debateDescribe: string,
+  debateType: string,
+  debateStatus: string,
   threadNo: number,
-  threadName: string,
-  parentThreadNo?: number,
-  threadDescription?: string,
-  createUserNo?: number,
-  threadStatus: string,
-  threadType: string
+  parentDebateNo: number,
+  createUserNo: number,
+  registerDateTime: string,
+  updateDateTime: string
 }
 
 export type WebSocketInfo = {
@@ -39,8 +43,8 @@ export type DebateStateType = {
   recentDebateList: DebateInfo[],
   debateMessageList: MessageInfo[],
   userNoList: UserInfo[],
-  selectedThreadInfo: DebateInfo,
-  selectedThreadNo: number,
+  selectedDebateInfo: DebateInfo[],
+  selectedDebateNo: number,
   searchUserNoList: number[],
   webSocketList: WebSocketInfo[]
 }
@@ -49,8 +53,8 @@ const initialState: DebateStateType = {
   recentDebateList: [],
   debateMessageList: [],
   userNoList: [],
-  selectedThreadInfo: {} as DebateInfo,
-  selectedThreadNo: 0,
+  selectedDebateInfo: [],
+  selectedDebateNo: 0,
   searchUserNoList: [],
   webSocketList: []
 }
@@ -59,24 +63,27 @@ export const DebateSlice = createSlice({
   name: "debate",
   initialState,
   reducers: {
-    setSelectedThreadNo: (state, action) => ({
+    setSelectedDebateNo: (state, action) => ({
       ...state,
-      selectedThreadNo: action.payload
+      selectedDebateNo: action.payload
     }),
-    setThreadInfo: (state, action) => {
-      const thread = action.payload;
-      const threadInfo = {
-        threadNo: thread.threadNo,
-        threadName: thread.threadName,
-        parentThreadNo: thread.parentThreadNo,
-        threadDescription: thread.threadDescription,
-        createUserNo: thread.createUserNo,
-        threadStatus: thread.threadStatus,
-        threadType: thread.threadType
-      };
+    setDebateInfo: (state, action) => {
+      const debateList = action.payload.debateList.map((debate: any) => ({
+        debateNo: debate.debateNo,
+        debateRootNo: debate.debateRootNo,
+        debateName: debate.debateName,
+        debateDescribe: debate.debateDescribe,
+        debateType: debate.debateType,
+        debateStatus: debate.debateStatus,
+        threadNo: debate.threadNo,
+        parentDebateNo: debate.parentDebateNo,
+        createUserNo: debate.createUserNo,
+        registerDateTime: debate.registerDateTime,
+        updateDateTime: debate.updateDateTime
+      }))
       return {
         ...state,
-        selectedThreadInfo: threadInfo
+        selectedDebateInfo: debateList
       }
     },
     addMessageList: (state, action) => {
@@ -111,18 +118,22 @@ export const DebateSlice = createSlice({
     clearWebSocket: (state) => ({
       ...state,
       webSocketList: []
-    })
+    }),
   },
   extraReducers: builder => {
       builder.addCase(GetRecentDebateList.fulfilled, (state, action) => {
-        const recentDebateList = action.payload.recentThreadList.map((thread: any) => ({
-          threadNo: thread.threadNo,
-          threadName: thread.threadName,
-          parentThreadNo: thread.parentThreadNo,
-          threadDescription: thread.threadDescription,
-          createUserNo: thread.createUserNo,
-          threadStatus: thread.threadStatus,
-          threadType: thread.threadType
+        const recentDebateList = action.payload.debateList.map((debate: any) => ({
+          debateNo: debate.debateNo,
+          debateRootNo: debate.debateRootNo,
+          debateName: debate.debateName,
+          debateDescribe: debate.debateDescribe,
+          debateType: debate.debateType,
+          debateStatus: debate.debateStatus,
+          threadNo: debate.threadNo,
+          parentDebateNo: debate.parentDebateNo,
+          createUserNo: debate.createUserNo,
+          registerDateTime: debate.registerDateTime,
+          updateDateTime: debate.updateDateTime
         }))
         return {
           ...state,

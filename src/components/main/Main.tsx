@@ -16,7 +16,7 @@ const Main = () => {
       {/*</Box>*/}
       <Box className={DebateStyle.debate}>
         <div className={DebateStyle.debateTitle}>
-          <Typography variant="h2">最近のスレッドリスト</Typography>
+          <Typography variant="h2">最近のルームリスト</Typography>
         </div>
         <DebateListContainer />
       </Box>
