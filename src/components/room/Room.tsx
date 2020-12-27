@@ -1,21 +1,25 @@
-import React from "react";
-import {Box, Button, List, ListItem, ListItemText, Typography} from "@material-ui/core";
+import React, {useState} from "react";
+import {Box, Button, IconButton, List, ListItem, ListItemText, Typography} from "@material-ui/core";
 import {DebateInfo} from "../../store/debate/DebateReducer";
 import {makeStyles} from "@material-ui/core/styles";
 import DebateContainer from "../debate/DebateContainer";
 import clsx from "clsx";
+import AddIcon from '@material-ui/icons/Add';
+import CreateDebateModal from "../modal/CreateDebateModal";
+import {CreateDebateParamType} from "../../utils/api/requestTypes";
 
 type RoomParamType = {
   recentDebate: DebateInfo
   childDebateList: DebateInfo[],
-  showDebateHandler: (debateNo: number) => void,
+  showDebateHandler: (isHome: boolean, debateNo: number) => void,
+  addDebateHandler: (param: CreateDebateParamType, callback: any) => void
 }
 
 type ChildRoomParamType = {
   debateNo: number,
   debateName: string,
   debateDescribe: string,
-  showChildDebateHandler: (debateNo: number) => void
+  showChildDebateHandler: (isHome: boolean, debateNo: number) => void
 }
 
 const useStyle = makeStyles(({
@@ -24,7 +28,6 @@ const useStyle = makeStyles(({
   },
   roomHeader: {
     backgroundColor: "#81c784",
-    paddingBottom: "2em",
     justifyContent: "center"
   },
   room: {
@@ -52,13 +55,16 @@ const useStyle = makeStyles(({
   },
   hidden: {
     display: "none"
+  },
+  subRoomBtn: {
+    marginLeft: "1em"
   }
 }))
 
 const ChildRoom = (props: ChildRoomParamType) => {
   const classes = useStyle();
   return (
-    <ListItem button className={classes.childRoom} onClick={() => props.showChildDebateHandler(props.debateNo)}>
+    <ListItem button className={classes.childRoom} onClick={() => props.showChildDebateHandler(false, props.debateNo)}>
       <ListItemText primary={props.debateName} secondary={props.debateDescribe} />
     </ListItem>
   )
@@ -66,19 +72,40 @@ const ChildRoom = (props: ChildRoomParamType) => {
 
 const Room = (props: RoomParamType) => {
   const classes = useStyle();
+  const [open, setOpen] = useState(false)
+  const closeHandler = () => {
+    setOpen(false)
+  }
+
+  const openHandler = () => {
+    setOpen(true)
+  }
+
   return (
     <Box display="flex" flexDirection="column" className={classes.room}>
       <Box className={clsx( {
-        [classes.hidden]: !props.recentDebate.parentDebateNo,
         [classes.toParentBtn]: true
       })}>
-        <Button onClick={() => props.showDebateHandler(props.recentDebate.parentDebateNo)}>親ルームに移動</Button>
+        <Button onClick={() => props.showDebateHandler(!props.recentDebate.parentDebateNo, props.recentDebate.parentDebateNo)}>
+          {!props.recentDebate.parentDebateNo ? "ホームに移動" : "親ルームに移動"}
+        </Button>
       </Box>
       <Box display="flex" className={classes.roomHeader}>
         <Typography className={classes.roomName}>{props.recentDebate.debateName}</Typography>
       </Box>
       <Box display="flex" className={classes.roomDescribe}>
         <Typography>{props.recentDebate.debateDescribe}</Typography>
+      </Box>
+      <Box display="flex" flexDirection="row" className={clsx({
+        [classes.threadTitle]: props.childDebateList.length > 0,
+        [classes.hidden]: !!props.recentDebate.parentDebateNo
+      })} >
+        <Typography className={classes.threadName}>サブルーム</Typography>
+        <Button
+          variant="contained" color="primary" onClick={openHandler}
+          endIcon={<AddIcon />} className={classes.subRoomBtn} >
+          追加
+        </Button>
       </Box>
       <List>
       {
@@ -94,6 +121,7 @@ const Room = (props: RoomParamType) => {
         </Box>
         <DebateContainer />
       </Box>
+      <CreateDebateModal open={open} closeHandler={closeHandler} addDebateHandler={props.addDebateHandler} parentDebateNo={props.recentDebate.debateNo} />
     </Box>
   )
 }

@@ -11,9 +11,10 @@ const useStyle = makeStyles(( {
   title: {
     fontSize: "2em"
   },
-  threadName: {
+  inputTitle: {
+    width: "10%",
     paddingRight: "1em",
-  }
+  },
 }))
 
 const CreateDebate = (props: CreateDebateProps) => {
@@ -34,11 +35,11 @@ const CreateDebate = (props: CreateDebateProps) => {
     <Box className={DebateStyle.createDebate} >
       <Typography className={classes.title}>新規ルーム作成</Typography>
       <div className={DebateStyle.createDebateWrap}>
-        <Typography variant="h3" className={classes.threadName}>ルーム名</Typography>
+        <Typography variant="h3" className={classes.inputTitle}>ルーム名</Typography>
         <TextField name="debateName" color="primary" value={form.debateName} onChange={changeFormHandler} />
       </div>
       <div className={DebateStyle.createDebateWrap}>
-        <Typography variant="h3" className={classes.threadName}>詳細</Typography>
+        <Typography variant="h3" className={classes.inputTitle}>詳細</Typography>
         <TextField name="debateDescribe" color="primary" value={form.debateDescribe} onChange={changeFormHandler} />
       </div>
       <Button variant="contained" color="primary" onClick={() => props.createDebateHandler(form)}>登録</Button>

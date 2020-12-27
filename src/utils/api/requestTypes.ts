@@ -27,5 +27,5 @@ export type CreateDebateParamType = {
   debateDescribe: string,
   debateType: string,
   debateStatus: string,
-  parentDebateNo?: number
+  parentDebateNo?: number | null
 }

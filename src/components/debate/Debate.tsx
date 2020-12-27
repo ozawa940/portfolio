@@ -86,10 +86,6 @@ const Debate = (props: DebateProps) => {
 
   return (
     <Box display="flex" flexDirection="column" className={classes.thread}>
-      {/*<Button onClick={props.goToThreadList} startIcon={<ArrowBackIcon />}>Go to MainPage</Button>*/}
-      {/*<Box display="flex" className={classes.threadHeader}>*/}
-      {/*  <Typography className={classes.threadName}>{props.debateInfo.debateName}</Typography>*/}
-      {/*</Box>*/}
       <FixedSizeList
         itemSize={80}
         height={350}

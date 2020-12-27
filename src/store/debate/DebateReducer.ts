@@ -122,7 +122,7 @@ export const DebateSlice = createSlice({
   },
   extraReducers: builder => {
       builder.addCase(GetRecentDebateList.fulfilled, (state, action) => {
-        const recentDebateList = action.payload.debateList.map((debate: any) => ({
+        const recentDebateList = action.payload.debateList.filter((debate: any) => !debate.parentDebateNo).map((debate: any) => ({
           debateNo: debate.debateNo,
           debateRootNo: debate.debateRootNo,
           debateName: debate.debateName,

@@ -5,6 +5,7 @@ import {RootState} from "../../store";
 import {DebateInfo, DebateSlice} from "../../store/debate/DebateReducer";
 import {useHistory, useLocation} from "react-router-dom";
 import requestMap from "../../utils/api/requestMap";
+import {CreateDebateParamType} from "../../utils/api/requestTypes";
 
 const RoomContainer = () => {
   const location = useLocation();
@@ -24,14 +25,27 @@ const RoomContainer = () => {
     .filter((info: DebateInfo) => info.debateNo === selectedDebateNo)
 
   const childDebateList = debateState.selectedDebateInfo
-    .filter((info: DebateInfo) => info.debateNo !== selectedDebateNo)
+    .filter((info: DebateInfo) => info.debateNo !== selectedDebateNo && selectedDebateNo === info.parentDebateNo )
 
   const param = {
-    recentDebate: recentDebateInfo.length > 0 ? recentDebateInfo[0] : [],
+    recentDebate: recentDebateInfo.length > 0 ? recentDebateInfo[0] : {},
     childDebateList: childDebateList.length > 0 ? childDebateList : [],
-    showDebateHandler: (debateNo: number) => {
-      dispatch(DebateSlice.actions.setSelectedDebateNo(debateNo))
-      history.push(`/room/${debateNo}`);
+    showDebateHandler: (isHome: boolean, debateNo: number) => {
+      if (isHome) {
+        dispatch(DebateSlice.actions.setSelectedDebateNo(debateNo))
+        history.push("/");
+      } else {
+        dispatch(DebateSlice.actions.setSelectedDebateNo(debateNo))
+        history.push(`/room/${debateNo}`);
+      }
+    },
+    addDebateHandler: (param: CreateDebateParamType, callback: any) => {
+      requestMap.createDebate(param).then(() => {
+        callback()
+        requestMap.getDebateInfo(debateState.selectedDebateNo).then((res) => {
+          dispatch(DebateSlice.actions.setDebateInfo(res.data))
+        })
+      })
     }
   }
 
