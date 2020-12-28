@@ -1,11 +1,11 @@
 export type GetDebateMessageListParamType = {
-  threadNo: number,
+  debateNo: number,
   userNoList: number[]
 }
 
 
 export type PostMessageToThreadParamType = {
-  threadNo: number,
+  debateNo: number,
   message: string,
   messageType: string,
   accessToken: string
@@ -22,8 +22,19 @@ export type CreateUserParamType = {
   userName: string
 }
 
-export type CreateThreadParamType = {
-  threadName: string,
-  threadType: string,
-  threadStatus: string
+export type CreateDebateParamType = {
+  debateName: string,
+  debateDescribe: string,
+  debateType: string,
+  debateStatus: string,
+  parentDebateNo?: number | null,
+  voteType: string
+}
+
+export type PostVoteParamType = {
+  voteDebateNo: number,
+  score: number,
+  voteType: string,
+  voteStatus: string,
+  voteReason: string
 }

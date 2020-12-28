@@ -1,6 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import requestMap from "../../utils/api/requestMap";
-import {threadId} from "worker_threads";
 import {GetDebateMessageListParamType} from "../../utils/api/requestTypes";
 
 
@@ -17,16 +16,16 @@ export const GetRecentDebateList = createAsyncThunk("debate/recentDebateList", a
   }
 })
 
-export const GetDebateMessageList = createAsyncThunk("debate/messageList", async (threadNo: number) => {
+export const GetDebateMessageList = createAsyncThunk("debate/messageList", async (debateNo: number) => {
   try {
-    const resMessage = await requestMap.getDebateMessageList(threadNo)
+    const resMessage = await requestMap.getDebateMessageList(debateNo)
     const userNoSet = new Set<number>()
     resMessage.data.messageList.filter((m: any) => m.userNo !== 0).forEach((m: any) => userNoSet.add(m.userNo))
 
     let resUser = null
     if (userNoSet.size !== 0) {
       const param = {
-        threadNo: threadNo,
+        debateNo: debateNo,
         userNoList: Array.from(userNoSet)
       }
       resUser = await requestMap.getDebateUserList(param)

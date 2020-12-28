@@ -57,6 +57,13 @@ const useStyle = makeStyles(({
     backgroundColor: "#81c784",
     paddingBottom: "2em",
     justifyContent: "center"
+  },
+  threadView: {
+    width: "100% !important",
+  },
+  thread: {
+    // width: "80%",
+    // height: "80%"
   }
 }))
 
@@ -78,17 +85,14 @@ const Debate = (props: DebateProps) => {
   }
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Button onClick={props.goToThreadList} startIcon={<ArrowBackIcon />}>Go to MainPage</Button>
-      <Box display="flex" className={classes.threadHeader}>
-        <Typography className={classes.threadName}>{props.debateInfo.threadName}</Typography>
-      </Box>
+    <Box display="flex" flexDirection="column" className={classes.thread}>
       <FixedSizeList
         itemSize={80}
-        height={600}
+        height={350}
         itemCount={props.messageList.length}
-        width={600}
+        width={100}
         itemData={props}
+        className={classes.threadView}
         ref={ref}
       >
         {renderRow}

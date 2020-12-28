@@ -8,14 +8,16 @@ const CreateDebateContainer = () => {
   const dispatch = useDispatch();
 
   const createDebateParam = {
-    createThreadHandler: (threadName: string) => {
-      const threadParam = {
-        threadName: threadName,
-        threadType: "ROOM",
-        threadStatus: "PUBLIC"
+    createDebateHandler: (form: any) => {
+      const param = {
+        debateName: form.debateName,
+        debateDescribe: form.debateDescribe,
+        debateType: "DEBATE",
+        debateStatus: "PUBLIC",
+        voteType: "FOR_AND_AGAINST"
       }
-      requestMap.createThread(threadParam).then((res) => {
-        dispatch(GetRecentDebateList())
+      requestMap.createDebate(param).then((res) => {
+        setTimeout(() => {dispatch(GetRecentDebateList())}, 5000)
       })
     }
   }
