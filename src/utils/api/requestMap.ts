@@ -6,7 +6,7 @@ import {
   CreateUserParamType,
   GetAccessTokenParamType,
   GetDebateMessageListParamType,
-  PostMessageToThreadParamType
+  PostMessageToThreadParamType, PostVoteParamType
 } from "./requestTypes";
 
 const getConfig = (url: string, method: Method): AxiosRequestConfig => {
@@ -48,6 +48,12 @@ const requestMap = {
   },
   createDebate: (param: CreateDebateParamType) => {
     return getRequestHandler(getConfig("/debate", "post"), param)
+  },
+  postVote: (param: PostVoteParamType) => {
+    return getRequestHandler(getConfig("/vote", "post"), param)
+  },
+  getVote: (debateNo: number) => {
+    return getRequestHandler(getConfig(`/vote?debateNo=${debateNo}`, "get"))
   }
 };
 

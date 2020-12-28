@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Room from "./Room"
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
@@ -11,6 +11,7 @@ const RoomContainer = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const history = useHistory();
+  const [voted, setVoted] = useState(false)
 
   const debateState: any = useSelector<RootState>(state => {
     return {
@@ -46,7 +47,26 @@ const RoomContainer = () => {
           dispatch(DebateSlice.actions.setDebateInfo(res.data))
         })
       })
-    }
+    },
+    postVote: (isAgree: boolean) => {
+      const param = {
+        voteDebateNo: selectedDebateNo,
+        score: isAgree ? 1 : 0,
+        voteType: "FOR_AND_AGAINST",
+        voteStatus: "PUBLIC",
+        voteReason: "TEST"
+      }
+      requestMap.postVote(param)
+      const callback = () => {
+        requestMap.getVote(selectedDebateNo).then((res) => {
+          dispatch(DebateSlice.actions.setSelectedVoteInfo(res.data))
+        })
+      }
+      setVoted(true)
+      setTimeout(callback, 5000)
+    },
+    voteInfo: debateState.selectedVoteInfo,
+    voted: voted
   }
 
   const initialLoad = () => {
@@ -59,6 +79,11 @@ const RoomContainer = () => {
     requestMap.getDebateInfo(groups.debateNo).then((res) => {
       dispatch(DebateSlice.actions.setDebateInfo(res.data))
     })
+    requestMap.getVote(groups.debateNo).then((res) => {
+      dispatch(DebateSlice.actions.setSelectedVoteInfo(res.data))
+    })
+
+    setVoted(false)
   }
 
   useEffect(initialLoad, [location.pathname, dispatch])

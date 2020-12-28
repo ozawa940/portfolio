@@ -34,6 +34,11 @@ export type DebateInfo = {
   updateDateTime: string
 }
 
+export type VoteInfo = {
+  score: number,
+  count: number
+}
+
 export type WebSocketInfo = {
   id: any,
   url: string
@@ -46,7 +51,8 @@ export type DebateStateType = {
   selectedDebateInfo: DebateInfo[],
   selectedDebateNo: number,
   searchUserNoList: number[],
-  webSocketList: WebSocketInfo[]
+  webSocketList: WebSocketInfo[],
+  selectedVoteInfo?: VoteInfo
 }
 
 const initialState: DebateStateType = {
@@ -56,7 +62,11 @@ const initialState: DebateStateType = {
   selectedDebateInfo: [],
   selectedDebateNo: 0,
   searchUserNoList: [],
-  webSocketList: []
+  webSocketList: [],
+  selectedVoteInfo: {
+    score: 0,
+    count: 0
+  }
 }
 
 export const DebateSlice = createSlice({
@@ -86,6 +96,10 @@ export const DebateSlice = createSlice({
         selectedDebateInfo: debateList
       }
     },
+    setSelectedVoteInfo: (state, action) => ({
+      ...state,
+      selectedVoteInfo: action.payload
+    }),
     addMessageList: (state, action) => {
       const debateMessageList = state.debateMessageList.concat(action.payload).sort((n1, n2) => n1.messageNo - n2.messageNo);
       const prevDebateUserNoList = state.debateMessageList.map((message: any) => message.userNo)

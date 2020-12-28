@@ -35,6 +35,7 @@ const CreateDebateModal = (props: CreateDebateModalParamType) => {
     debateDescribe: "",
     debateType: "DEBATE",
     debateStatus: "PUBLIC",
+    voteType: "FOR_AND_AGAINST"
   })
 
   const addDebateHandler = () => {

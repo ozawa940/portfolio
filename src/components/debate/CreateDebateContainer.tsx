@@ -14,9 +14,10 @@ const CreateDebateContainer = () => {
         debateDescribe: form.debateDescribe,
         debateType: "DEBATE",
         debateStatus: "PUBLIC",
+        voteType: "FOR_AND_AGAINST"
       }
       requestMap.createDebate(param).then((res) => {
-        dispatch(GetRecentDebateList())
+        setTimeout(() => {dispatch(GetRecentDebateList())}, 5000)
       })
     }
   }

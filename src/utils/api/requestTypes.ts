@@ -27,5 +27,14 @@ export type CreateDebateParamType = {
   debateDescribe: string,
   debateType: string,
   debateStatus: string,
-  parentDebateNo?: number | null
+  parentDebateNo?: number | null,
+  voteType: string
+}
+
+export type PostVoteParamType = {
+  voteDebateNo: number,
+  score: number,
+  voteType: string,
+  voteStatus: string,
+  voteReason: string
 }
