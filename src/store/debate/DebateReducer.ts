@@ -104,7 +104,7 @@ export const DebateSlice = createSlice({
       const debateMessageList = state.debateMessageList.concat(action.payload).sort((n1, n2) => n1.messageNo - n2.messageNo);
       const prevDebateUserNoList = state.debateMessageList.map((message: any) => message.userNo)
       const newDebateUserNoList = debateMessageList.map((message: any) => message.userNo)
-      const searchUserNoList = newDebateUserNoList.filter(num => prevDebateUserNoList.indexOf(num) === -1)
+      const searchUserNoList = newDebateUserNoList.filter(num => num > 0 && prevDebateUserNoList.indexOf(num) === -1)
 
       return {
       ...state,

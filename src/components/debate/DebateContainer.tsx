@@ -73,6 +73,7 @@ function initialLoad(dispatch: Dispatch<any>, location: any) {
       .map((debate: any) => debate.threadNo)[0]
 
     const dist = `/poll/room/${threadNo}/message`
+    const distVote = `/poll/room/${groups.debateNo}/vote`
 
     let client = window.WebSocketClient
     const connectWebsocketCallback = async () => {
@@ -93,6 +94,19 @@ function initialLoad(dispatch: Dispatch<any>, location: any) {
             updateTimestamp: message.updateTimestamp
           }))
           dispatch(DebateSlice.actions.addMessageList(debateMessageList))
+        }
+      });
+      // TODO: check Update
+      const subscribe2 = await client.subscribe(distVote, (msg: any) => {
+        const voteList = JSON.parse(msg.body)
+        if (voteList.length > 0) {
+          const getVote = () => {
+            requestMap.getVote(groups.debateNo).then((res) => {
+              dispatch(DebateSlice.actions.setSelectedVoteInfo(res.data))
+            })
+          }
+          // wait update cache
+          setTimeout(getVote, 5000)
         }
       });
       const newSocket = { id : subscribe.id, url: dist}

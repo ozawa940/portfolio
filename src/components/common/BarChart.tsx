@@ -37,12 +37,16 @@ const BarChart = (props: BarChartPropsType) => {
     ctx.fillRect(0, 0,  base * props.leftCount, props.height)
     ctx2.fillStyle = "red"
     ctx2.fillRect(base * props.leftCount, 0, base * props.rightCount, props.height)
-    ctx3.font = "2em sans-serif"
-    ctx3.fillStyle="#ffffff"
-    ctx3.fillText(`${props.leftCount}`, base * props.leftCount / widthRate, props.height / 1.5)
-    ctx4.font = "2em sans-serif"
-    ctx4.fillStyle="#ffffff"
-    ctx4.fillText(`${props.rightCount}`, (base * props.leftCount) + (base * props.rightCount / widthRate), props.height / 1.5)
+    if (props.leftCount > 0) {
+      ctx3.font = "2em sans-serif"
+      ctx3.fillStyle="#ffffff"
+      ctx3.fillText(`${props.leftCount}`, base * props.leftCount / widthRate, props.height / 1.5)
+    }
+    if (props.rightCount > 0) {
+      ctx4.font = "2em sans-serif"
+      ctx4.fillStyle="#ffffff"
+      ctx4.fillText(`${props.rightCount}`, (base * props.leftCount) + (base * props.rightCount / widthRate), props.height / 1.5)
+    }
   }, [props.leftCount, props.rightCount, props.width, props.height])
 
   return (
