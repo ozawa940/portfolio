@@ -43,6 +43,9 @@ const requestMap = {
   refreshAccessToken: (refreshToken: string) => {
     return getRequestHandler(getConfig("/token/refresh", "get"), null, {refreshToken: refreshToken})
   },
+  deleteAccessToken: (accessToken: string) => {
+    return getRequestHandler(getConfig("/token", "delete"), null, {accessToken: accessToken})
+  },
   createUser: (param: CreateUserParamType) => {
     return getRequestHandler(getConfig("/user", "post"), param)
   },
@@ -54,6 +57,9 @@ const requestMap = {
   },
   getVote: (debateNo: number) => {
     return getRequestHandler(getConfig(`/vote?debateNo=${debateNo}`, "get"))
+  },
+  getUserByAccessToken: (accessToken: string) => {
+    return getRequestHandler(getConfig("/user", "get"), null, {accessToken: accessToken})
   }
 };
 

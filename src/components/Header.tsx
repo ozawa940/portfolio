@@ -7,6 +7,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import HomeIcon from '@material-ui/icons/Home';
 import clsx from "clsx";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const useStyle = makeStyles(({
   title: {
@@ -15,6 +16,10 @@ const useStyle = makeStyles(({
   icon: {
     width: "1.5em",
     height: "1.5em"
+  },
+  menu: {
+    display: "flex",
+    flexDirection: "column"
   }
 }))
 
@@ -23,7 +28,9 @@ type HeaderProps = {
   isLogin: boolean,
   isLoginPath: boolean,
   goToLoginPageHandler: () => void,
-  goToMainPageHandler: () => void
+  goToMainPageHandler: () => void,
+  logoutHandler: () => void,
+  showAccountHandler: () => void
 }
 
 const Header = (props: HeaderProps) => {
@@ -54,14 +61,21 @@ const Header = (props: HeaderProps) => {
             <ArrowBackIcon className={classes.icon} />
           </IconButton>
         </div>
-        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+        <Menu open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              onClose={() => setAnchorEl(null)}
+        >
           <MenuItem>
-            <MenuItem>
-              <ListItem>
-                <HomeIcon />
-                <ListItemText primary="アカウント情報" />
-              </ListItem>
-            </MenuItem>
+            <ListItem onClick={props.showAccountHandler}>
+              <HomeIcon />
+              <ListItemText primary="アカウント情報" />
+            </ListItem>
+          </MenuItem>
+          <MenuItem>
+            <ListItem onClick={props.logoutHandler}>
+              <ExitToAppIcon />
+              <ListItemText primary="ログアウト" />
+            </ListItem>
           </MenuItem>
         </Menu>
       </div>

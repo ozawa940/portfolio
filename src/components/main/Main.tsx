@@ -10,13 +10,9 @@ const Main = () => {
   return (
     <Box className={AppStyle.main}>
       <CreateDebateContainer />
-      {/*<Box>*/}
-      {/*  <Typography component="h2">Hot Debate List</Typography>*/}
-      {/*  <DebateListContainer />*/}
-      {/*</Box>*/}
       <Box className={DebateStyle.debate}>
         <div className={DebateStyle.debateTitle}>
-          <Typography variant="h2">最近のルームリスト</Typography>
+          <Typography variant="h2">ルームリスト</Typography>
         </div>
         <DebateListContainer />
       </Box>

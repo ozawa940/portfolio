@@ -9,6 +9,7 @@ import {TokenSlice} from "../store/token/TokenReducer";
 import {RootState} from "../store";
 import {ErrorDialog} from "./common/ErrorDialog";
 import {CommonSlice} from "../store/common/CommonReducer";
+import MyAccountModal from "./modal/MyAccountModal";
 
 const HeaderContainer = () => {
   const history = useHistory();
@@ -22,6 +23,7 @@ const HeaderContainer = () => {
   })
   const [refreshFlg, setRefreshFlg] = useState(false);
   const [cookie, setCookie, removeCookie] = useCookies(["accessToken", "refreshToken"]);
+  const [account, setAccount] = useState(false)
 
   const checkTokenInCookie = () => {
     if (isNotBlank(cookie.accessToken) && isNotBlank(cookie.refreshToken)) {
@@ -73,6 +75,19 @@ const HeaderContainer = () => {
     },
     goToMainPageHandler: () => {
       history.push("/");
+    },
+    logoutHandler: () => {
+      requestMap.deleteAccessToken(headerState.accessToken).then(() => {
+        dispatch(TokenSlice.actions.clearToken())
+        removeCookie("accessToken");
+        removeCookie("refreshToken")
+      })
+    },
+    showAccountHandler: () => {
+      requestMap.getUserByAccessToken(headerState.accessToken).then((res) => {
+        dispatch(TokenSlice.actions.setAccount(res.data))
+        setAccount(true)
+      })
     }
   }
 
@@ -85,10 +100,19 @@ const HeaderContainer = () => {
     }
   };
 
+  const myAccountParam = {
+    open: account,
+    closeHandler: () => {
+      setAccount(false)
+    },
+    account: headerState.account
+  }
+
   return (
     <React.Fragment>
       <Header {...headerParam}></Header>
       <ErrorDialog {...errorDialogParam} />
+      <MyAccountModal {...myAccountParam} />
     </React.Fragment>
   )
 }

@@ -45,7 +45,7 @@ const useStyle = makeStyles(({
     justifyContent: "center"
   },
   childRoom: {
-    backgroundColor: "#dedede",
+    backgroundColor: "#12e21ae0",
   },
   thread : {
     paddingTop: "1em",
@@ -81,6 +81,9 @@ const useStyle = makeStyles(({
   chart: {
     height: "3em",
     marginBottom: "1em"
+  },
+  backBtn: {
+    backgroundColor: "#b5803e",
   }
 }))
 
@@ -111,7 +114,7 @@ const Room = (props: RoomParamType) => {
       <Box className={clsx( {
         [classes.toParentBtn]: true
       })}>
-        <Button onClick={() => props.showDebateHandler(!props.recentDebate.parentDebateNo, props.recentDebate.parentDebateNo)}>
+        <Button className={classes.backBtn} onClick={() => props.showDebateHandler(!props.recentDebate.parentDebateNo, props.recentDebate.parentDebateNo)}>
           {!props.recentDebate.parentDebateNo ? "ホームに移動" : "親ルームに移動"}
         </Button>
       </Box>

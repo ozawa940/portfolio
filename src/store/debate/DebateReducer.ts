@@ -17,7 +17,7 @@ export type MessageInfo = {
 
 export type UserInfo = {
   userNo: number,
-  userName: string
+  userName: string,
 }
 
 export type DebateInfo = {

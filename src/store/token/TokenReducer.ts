@@ -1,13 +1,20 @@
 import {createSlice} from "@reduxjs/toolkit";
 
+export type Account = {
+  userId: string,
+  userName: string,
+}
+
 export type TokenStateType = {
   accessToken: string,
   refreshToken: string,
+  account?: Account | null
 }
 
 const initialState: TokenStateType = {
   accessToken: "",
   refreshToken: "",
+  account: null
 }
 export const TokenSlice = createSlice({
   name: "token",
@@ -18,10 +25,14 @@ export const TokenSlice = createSlice({
         accessToken: action.payload.accessToken,
         refreshToken: action.payload.refreshToken
     }),
-    clearToken: (state, action) => ({
+    clearToken: (state) => ({
       ...state,
       accessToken: "",
       refreshToken: ""
+    }),
+    setAccount: (state, action) => ({
+      ...state,
+      account: action.payload
     })
   }
 })
