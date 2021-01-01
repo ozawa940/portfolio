@@ -17,17 +17,19 @@ const useStyle = makeStyles({
 
 const MyAccountModal = (props: MyAccountModalPropsType) => {
   const classes = useStyle()
+  const userId = props.account ? props.account.userId : ""
+  const userName = props.account ? props.account.userName : ""
   return (
     <Dialog open={props.open} onClose={props.closeHandler}>
       <DialogTitle>アカウント情報</DialogTitle>
       <DialogContent>
         <Box display="flex" flexDirection="row">
           <Typography className={classes.title}>アカウントID:</Typography>
-          <Typography>{props.account.userId}</Typography>
+          <Typography>{userId}</Typography>
         </Box>
         <Box display="flex" flexDirection="row">
           <Typography className={classes.title}>アカウント名:</Typography>
-          <Typography>{props.account.userName}</Typography>
+          <Typography>{userName}</Typography>
         </Box>
       </DialogContent>
     </Dialog>

@@ -38,3 +38,11 @@ export type PostVoteParamType = {
   voteStatus: string,
   voteReason: string
 }
+
+export type PostBoardTicketParamType = {
+  boardNo: number,
+  boardTicketName: string,
+  boardType: string,
+  boardTicketStatus: string,
+  boardTicketInfo: string
+}

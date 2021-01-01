@@ -5,13 +5,16 @@ import {RootState} from "../../store";
 import {DebateInfo, DebateSlice} from "../../store/debate/DebateReducer";
 import {useHistory, useLocation} from "react-router-dom";
 import requestMap from "../../utils/api/requestMap";
-import {CreateDebateParamType} from "../../utils/api/requestTypes";
+import {CreateDebateParamType, PostBoardTicketParamType} from "../../utils/api/requestTypes";
+import NoticeModal from "../modal/NoticeModal";
+import GlobalConfig from "../../config";
 
 const RoomContainer = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const history = useHistory();
   const [voted, setVoted] = useState(false)
+  const [notice, setNotice] = useState(false)
 
   const debateState: any = useSelector<RootState>(state => {
     return {
@@ -66,8 +69,12 @@ const RoomContainer = () => {
       setTimeout(callback, 5000)
     },
     voteInfo: debateState.selectedVoteInfo,
-    voted: voted
+    voted: voted,
+    deleteRequestHandler: () => {
+      setNotice(true)
+    }
   }
+
 
   const initialLoad = () => {
     const regex = /\/room\/(?<debateNo>[0-9]+)/
@@ -82,14 +89,38 @@ const RoomContainer = () => {
     requestMap.getVote(groups.debateNo).then((res) => {
       dispatch(DebateSlice.actions.setSelectedVoteInfo(res.data))
     })
-
     setVoted(false)
+  }
+
+
+  const noticeModalParam = {
+    open: notice,
+    closeHandler: () => {
+      setNotice(false)
+    },
+    actionHandler: () => {
+      const param = {
+        boardNo: parseInt(GlobalConfig.deleteRequestBoardNo!!),
+        boardTicketName: "削除申請",
+        boardType: "DELETE_REQUEST",
+        boardTicketStatus: "PUBLIC",
+        boardTicketInfo: `debateNo: ${debateState.selectedDebateNo}`
+      }
+      requestMap.postBoardTicket(param).then((res) => {
+        alert("申請完了しました")
+        setNotice(false)
+      })
+    },
+    message: "キャンセル申請を行いますか？",
   }
 
   useEffect(initialLoad, [location.pathname, dispatch])
 
   return (
-    <Room {...param} />
+    <React.Fragment>
+      <Room {...param} />
+      <NoticeModal {...noticeModalParam} />
+    </React.Fragment>
   )
 }
 

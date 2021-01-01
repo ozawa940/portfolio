@@ -8,7 +8,7 @@ const CreateDebateContainer = () => {
   const dispatch = useDispatch();
 
   const createDebateParam = {
-    createDebateHandler: (form: any) => {
+    createDebateHandler: (form: any, callback: () => void) => {
       const param = {
         debateName: form.debateName,
         debateDescribe: form.debateDescribe,
@@ -18,6 +18,8 @@ const CreateDebateContainer = () => {
       }
       requestMap.createDebate(param).then((res) => {
         setTimeout(() => {dispatch(GetRecentDebateList())}, 5000)
+        alert("ルームが作成されました")
+        callback()
       })
     }
   }

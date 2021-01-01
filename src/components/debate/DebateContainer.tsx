@@ -96,8 +96,8 @@ function initialLoad(dispatch: Dispatch<any>, location: any) {
           dispatch(DebateSlice.actions.addMessageList(debateMessageList))
         }
       });
-      // TODO: check Update
-      const subscribe2 = await client.subscribe(distVote, (msg: any) => {
+      // check Update
+      await client.subscribe(distVote, (msg: any) => {
         const voteList = JSON.parse(msg.body)
         if (voteList.length > 0) {
           const getVote = () => {

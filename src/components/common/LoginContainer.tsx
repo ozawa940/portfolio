@@ -57,6 +57,7 @@ const LoginContainer = () => {
         dispatch(TokenSlice.actions.setToken(token))
         setCookie("accessToken", token.accessToken, { path: "/", sameSite: true });
         setCookie("refreshToken", token.accessToken, { path: "/", sameSite: true });
+        alert("アカウントが作成されました")
         history.push("/")
       }).catch((e) => {
         const error = {

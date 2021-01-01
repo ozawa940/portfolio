@@ -6,7 +6,7 @@ import DebateContainer from "../debate/DebateContainer";
 import clsx from "clsx";
 import AddIcon from '@material-ui/icons/Add';
 import CreateDebateModal from "../modal/CreateDebateModal";
-import {CreateDebateParamType} from "../../utils/api/requestTypes";
+import {CreateDebateParamType, PostBoardTicketParamType} from "../../utils/api/requestTypes";
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import BarChart from "../common/BarChart";
@@ -18,7 +18,8 @@ type RoomParamType = {
   addDebateHandler: (param: CreateDebateParamType, callback: any) => void,
   postVote: (isAgree: boolean) => void,
   voteInfo: VoteInfo,
-  voted: boolean
+  voted: boolean,
+  deleteRequestHandler: () => void
 }
 
 type ChildRoomParamType = {
@@ -56,8 +57,12 @@ const useStyle = makeStyles(({
   threadName: {
     fontSize: "2em"
   },
-  toParentBtn: {
-    paddingBottom: "1em"
+  headerBtn: {
+    paddingBottom: "1em",
+    display: "flex"
+  },
+  headerSpace: {
+    flexGrow: 1
   },
   hidden: {
     display: "none"
@@ -84,6 +89,9 @@ const useStyle = makeStyles(({
   },
   backBtn: {
     backgroundColor: "#b5803e",
+  },
+  deleteBtn: {
+    backgroundColor: "#a7a7a7",
   }
 }))
 
@@ -111,11 +119,13 @@ const Room = (props: RoomParamType) => {
 
   return (
     <Box display="flex" flexDirection="column" className={classes.room}>
-      <Box className={clsx( {
-        [classes.toParentBtn]: true
-      })}>
+      <Box className={classes.headerBtn}>
         <Button className={classes.backBtn} onClick={() => props.showDebateHandler(!props.recentDebate.parentDebateNo, props.recentDebate.parentDebateNo)}>
           {!props.recentDebate.parentDebateNo ? "ホームに移動" : "親ルームに移動"}
+        </Button>
+        <Box className={classes.headerSpace}/>
+        <Button className={classes.deleteBtn} onClick={props.deleteRequestHandler}>
+          削除依頼
         </Button>
       </Box>
       <Box display="flex" className={classes.roomHeader}>

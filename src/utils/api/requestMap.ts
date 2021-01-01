@@ -5,7 +5,7 @@ import {
   CreateDebateParamType,
   CreateUserParamType,
   GetAccessTokenParamType,
-  GetDebateMessageListParamType,
+  GetDebateMessageListParamType, PostBoardTicketParamType,
   PostMessageToThreadParamType, PostVoteParamType
 } from "./requestTypes";
 
@@ -54,6 +54,13 @@ const requestMap = {
   },
   postVote: (param: PostVoteParamType) => {
     return getRequestHandler(getConfig("/vote", "post"), param)
+  },
+  postBoardTicket: (param: PostBoardTicketParamType, accessToken?: string) => {
+    if (accessToken) {
+      return getRequestHandler(getConfig("/board/ticket", "post"), param, {accessToken: accessToken})
+    } else {
+      return getRequestHandler(getConfig("/board/ticket", "post"), param)
+    }
   },
   getVote: (debateNo: number) => {
     return getRequestHandler(getConfig(`/vote?debateNo=${debateNo}`, "get"))

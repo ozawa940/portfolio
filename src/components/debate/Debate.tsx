@@ -4,7 +4,6 @@ import {DebateInfo, MessageInfo, UserInfo} from "../../store/debate/DebateReduce
 import {FixedSizeList, ListChildComponentProps} from "react-window"
 import SendIcon from '@material-ui/icons/Send';
 import {makeStyles} from "@material-ui/core/styles";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 export type DebateMessageProps = {
   message: MessageInfo,

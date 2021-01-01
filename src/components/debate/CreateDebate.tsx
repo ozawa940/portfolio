@@ -4,7 +4,7 @@ import DebateStyle from '../../style/Debate.module.scss'
 import {makeStyles} from "@material-ui/core/styles";
 
 type CreateDebateProps = {
-  createDebateHandler: (form: any) => void
+  createDebateHandler: (form: any, callback: () => void) => void
 }
 
 const useStyle = makeStyles(( {
@@ -23,6 +23,12 @@ const CreateDebate = (props: CreateDebateProps) => {
     debateName: "",
     debateDescribe: ""
   })
+  const clearForm = () => {
+    setForm({
+      debateName: "",
+      debateDescribe: ""
+    })
+  }
 
   const changeFormHandler = (event: ChangeEvent<any>) => {
     const target = event.target;
@@ -42,7 +48,7 @@ const CreateDebate = (props: CreateDebateProps) => {
         <Typography variant="h3" className={classes.inputTitle}>詳細</Typography>
         <TextField name="debateDescribe" color="primary" value={form.debateDescribe} onChange={changeFormHandler} />
       </div>
-      <Button variant="contained" color="primary" onClick={() => props.createDebateHandler(form)}>登録</Button>
+      <Button variant="contained" color="primary" onClick={() => props.createDebateHandler(form, clearForm)}>登録</Button>
     </Box>
   )
 }
