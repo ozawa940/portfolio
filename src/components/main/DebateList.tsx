@@ -17,7 +17,7 @@ const DebateCard = (props: DebateCardProps) => {
         <Typography component="h4">{ props.debateCard.debateDescribe}</Typography>
       </CardContent>
       <CardActions>
-        <Button onClick={() => props.goToDebateHandler(props.debateCard.threadNo)}>
+        <Button onClick={() => props.goToDebateHandler(props.debateCard.debateNo)}>
           ルームに入る
         </Button>
       </CardActions>
@@ -27,20 +27,30 @@ const DebateCard = (props: DebateCardProps) => {
 
 export type DebateListProps = {
   debateList: DebateInfo[],
+  privateDebateList?: DebateInfo[],
   goToDebateHandler: (thread: number) => void
 }
 
 const DebateList = (props: DebateListProps) => {
 
   return (
-    <Box className={DebateStyle.debateList}>
-      {
-        props.debateList.map((card) => (
-          <DebateCard debateCard={card} goToDebateHandler={props.goToDebateHandler}  />
-        ))
-      }
+    <Box>
+      <Box className={DebateStyle.debateList}>
+        {
+          props.debateList.map((card) => (
+            <DebateCard debateCard={card} goToDebateHandler={props.goToDebateHandler}  />
+          ))
+        }
+      </Box>
+      <Box className={DebateStyle.debateList}>
+        {
+          props.privateDebateList && props.privateDebateList.length > 0 ? props.privateDebateList.map((card) => (
+            <DebateCard debateCard={card} goToDebateHandler={props.goToDebateHandler}  />
+          )) : null
+        }
+      </Box>
     </Box>
-  )
+)
 }
 
 export default DebateList;

@@ -22,8 +22,11 @@ const requestMap = {
   getRecentDebateList: () => {
     return getRequestHandler(getConfig("/debate/recent/debate-list", "get"));
   },
-  getDebateMessageList: (debateNo: number) => {
-    return getRequestHandler(getConfig(`/chat/message-list?debateNo=${debateNo}`, "get"))
+  getPrivateDebateList: (accessToken: string) => {
+    return getRequestHandler(getConfig("/debate/private/debate-list", "get"), null, {accessToken: accessToken});
+  },
+  getDebateMessageList: (debateNo: number, accessToken?: string) => {
+    return getRequestHandler(getConfig(`/chat/message-list?debateNo=${debateNo}`, "get"), null, {accessToken: accessToken})
   },
   getDebateUserList: (param: GetDebateMessageListParamType) => {
     return getRequestHandler(getConfig("/thread/username-list", "post"), param)
@@ -31,8 +34,8 @@ const requestMap = {
   postMessageToThread: (param: PostMessageToThreadParamType) => {
     return getRequestHandler(getConfig("/chat/message", "post"), param)
   },
-  getDebateInfo: (debateNo: number) => {
-    return getRequestHandler(getConfig(`/debate?debateNo=${debateNo}`, "get"))
+  getDebateInfo: (debateNo: number, accessToken?: string) => {
+    return getRequestHandler(getConfig(`/debate?debateNo=${debateNo}`, "get"), null, {accessToken: accessToken})
   },
   getAccessToken: (param: GetAccessTokenParamType) => {
     return getRequestHandler(getConfig("/token", "post"), param)
@@ -49,8 +52,8 @@ const requestMap = {
   createUser: (param: CreateUserParamType) => {
     return getRequestHandler(getConfig("/user", "post"), param)
   },
-  createDebate: (param: CreateDebateParamType) => {
-    return getRequestHandler(getConfig("/debate", "post"), param)
+  createDebate: (param: CreateDebateParamType, accessToken?: string) => {
+    return getRequestHandler(getConfig("/debate", "post"), param, {accessToken})
   },
   postVote: (param: PostVoteParamType) => {
     return getRequestHandler(getConfig("/vote", "post"), param)

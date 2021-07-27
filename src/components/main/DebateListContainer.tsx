@@ -14,6 +14,7 @@ const DebateListContainer = () => {
   });
   const DebateListParam: DebateListProps = {
     debateList: debateState.recentDebateList,
+    privateDebateList: debateState.privateDebateList,
     goToDebateHandler: (debateNo) => {
         dispatch(DebateSlice.actions.setSelectedDebateNo(debateNo));
         history.push(`/room/${debateNo}`);

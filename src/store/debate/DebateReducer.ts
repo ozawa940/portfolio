@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {GetDebateMessageList, GetDebateUserNoList, GetRecentDebateList} from "./DebateActions";
+import {GetDebateMessageList, GetDebateUserNoList, GetPrivateDebateList, GetRecentDebateList} from "./DebateActions";
 
 export type MessageInfo = {
   messageNo: number,
@@ -47,6 +47,7 @@ export type WebSocketInfo = {
 export type DebateStateType = {
   recentDebateList: DebateInfo[],
   debateMessageList: MessageInfo[],
+  privateDebateList: DebateInfo[],
   userNoList: UserInfo[],
   selectedDebateInfo: DebateInfo[],
   selectedDebateNo: number,
@@ -58,6 +59,7 @@ export type DebateStateType = {
 const initialState: DebateStateType = {
   recentDebateList: [],
   debateMessageList: [],
+  privateDebateList: [],
   userNoList: [],
   selectedDebateInfo: [],
   selectedDebateNo: 0,
@@ -158,6 +160,25 @@ export const DebateSlice = createSlice({
           return {
             ...state,
             errorMsg: action.error.message ? action.error.message : "Invalid request"
+          }
+        })
+        .addCase(GetPrivateDebateList.fulfilled, (state, action) => {
+          const privateDebateList = action.payload.debateList.filter((debate: any) => !debate.parentDebateNo).map((debate: any) => ({
+            debateNo: debate.debateNo,
+            debateRootNo: debate.debateRootNo,
+            debateName: debate.debateName,
+            debateDescribe: debate.debateDescribe,
+            debateType: debate.debateType,
+            debateStatus: debate.debateStatus,
+            threadNo: debate.threadNo,
+            parentDebateNo: debate.parentDebateNo,
+            createUserNo: debate.createUserNo,
+            registerDateTime: debate.registerDateTime,
+            updateDateTime: debate.updateDateTime
+          }))
+          return {
+            ...state,
+            privateDebateList: privateDebateList
           }
         })
         .addCase(GetDebateMessageList.fulfilled, (state, action) => {

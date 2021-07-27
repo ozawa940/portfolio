@@ -1,5 +1,5 @@
 import GlobalConfig from "../../config"
-import {Client, StompConfig} from "@stomp/stompjs";
+import {Client, StompConfig, StompHeaders} from "@stomp/stompjs";
 import getWebsocketHandler from "./websocketHandler";
 
 const getConfig = (onConnectCallback: () => void): StompConfig => {

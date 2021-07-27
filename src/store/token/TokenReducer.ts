@@ -8,13 +8,15 @@ export type Account = {
 export type TokenStateType = {
   accessToken: string,
   refreshToken: string,
-  account?: Account | null
+  account?: Account | null,
+  initTokenFlg: boolean
 }
 
 const initialState: TokenStateType = {
   accessToken: "",
   refreshToken: "",
-  account: null
+  account: null,
+  initTokenFlg: false
 }
 export const TokenSlice = createSlice({
   name: "token",
@@ -23,7 +25,8 @@ export const TokenSlice = createSlice({
     setToken: (state, action) => ({
         ...state,
         accessToken: action.payload.accessToken,
-        refreshToken: action.payload.refreshToken
+        refreshToken: action.payload.refreshToken,
+      initTokenFlg: true
     }),
     clearToken: (state) => ({
       ...state,

@@ -19,7 +19,8 @@ const RoomContainer = () => {
   const debateState: any = useSelector<RootState>(state => {
     return {
       ...state.debateReducer,
-      accessToken: state.tokenReducer.accessToken
+      accessToken: state.tokenReducer.accessToken,
+      initTokenFlg: state.tokenReducer.initTokenFlg
     }
   })
 
@@ -46,7 +47,7 @@ const RoomContainer = () => {
     addDebateHandler: (param: CreateDebateParamType, callback: any) => {
       requestMap.createDebate(param).then(() => {
         callback()
-        requestMap.getDebateInfo(debateState.selectedDebateNo).then((res) => {
+        requestMap.getDebateInfo(debateState.selectedDebateNo, debateState.accessToken).then((res) => {
           dispatch(DebateSlice.actions.setDebateInfo(res.data))
         })
       })
@@ -83,7 +84,7 @@ const RoomContainer = () => {
       return
     }
     dispatch(DebateSlice.actions.setSelectedDebateNo(groups.debateNo));
-    requestMap.getDebateInfo(groups.debateNo).then((res) => {
+    requestMap.getDebateInfo(groups.debateNo, debateState.accessToken).then((res) => {
       dispatch(DebateSlice.actions.setDebateInfo(res.data))
     })
     requestMap.getVote(groups.debateNo).then((res) => {
@@ -114,7 +115,7 @@ const RoomContainer = () => {
     message: "キャンセル申請を行いますか？",
   }
 
-  useEffect(initialLoad, [location.pathname, dispatch])
+  useEffect(initialLoad, [location.pathname, dispatch, debateState.initTokenFlg])
 
   return (
     <React.Fragment>

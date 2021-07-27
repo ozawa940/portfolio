@@ -17,7 +17,8 @@ const DebateContainer = () => {
   const debateState: any = useSelector<RootState>(state => {
     return {
       ...state.debateReducer,
-      accessToken: state.tokenReducer.accessToken
+      accessToken: state.tokenReducer.accessToken,
+      initToken: state.tokenReducer.initTokenFlg
     }
   });
 
@@ -50,7 +51,7 @@ const DebateContainer = () => {
      }
   }
 
-  useEffect(() => initialLoad(dispatch, location), [location.pathname, dispatch])
+  useEffect(() => initialLoad(dispatch, location, debateState), [location.pathname, dispatch, debateState.initToken])
   useEffect(getSearchUserNoList, [searchFlg, dispatch])
 
   return (
@@ -58,24 +59,29 @@ const DebateContainer = () => {
   )
 }
 
-function initialLoad(dispatch: Dispatch<any>, location: any) {
+function initialLoad(dispatch: Dispatch<any>, location: any, state: any) {
   const regex = /\/room\/(?<debateNo>[0-9]+)/
   const groups: any = location.pathname.match(regex)!!.groups
   if (!groups || !groups.debateNo) {
     return
   }
 
-  requestMap.getDebateInfo(groups.debateNo).then((res) => {
+  requestMap.getDebateInfo(groups.debateNo, state.accessToken).then((res) => {
     dispatch(DebateSlice.actions.setDebateInfo(res.data))
 
-    const threadNo = res.data.debateList
-      .filter((debate: any) => debate.debateNo.toString() === groups.debateNo )
-      .map((debate: any) => debate.threadNo)[0]
+    const debate = res.data.debateList
+      .filter((debate: any) => debate.debateNo.toString() === groups.debateNo)[0]
+    const threadNo = debate.threadNo
 
-    const dist = `/poll/room/${threadNo}/message`
+    let dist = `/poll/room/${threadNo}/message`;
     const distVote = `/poll/room/${groups.debateNo}/vote`
 
+    if (debate.debateStatus === 'PRIVATE') {
+      dist = `/poll/room/private/${threadNo}/message`
+    }
+
     let client = window.WebSocketClient
+    const headers = {"accessToken": state.accessToken}
     const connectWebsocketCallback = async () => {
       const subscribe = await client.subscribe(dist, (msg: any) => {
         const messageList = JSON.parse(msg.body)
@@ -95,7 +101,7 @@ function initialLoad(dispatch: Dispatch<any>, location: any) {
           }))
           dispatch(DebateSlice.actions.addMessageList(debateMessageList))
         }
-      });
+      }, headers);
       // check Update
       await client.subscribe(distVote, (msg: any) => {
         const voteList = JSON.parse(msg.body)
@@ -108,14 +114,14 @@ function initialLoad(dispatch: Dispatch<any>, location: any) {
           // wait update cache
           setTimeout(getVote, 5000)
         }
-      });
+      }, headers);
       const newSocket = { id : subscribe.id, url: dist}
       dispatch(DebateSlice.actions.addWebSocket(newSocket))
     }
 
     const debateNo = Number(groups.debateNo)
     dispatch(DebateSlice.actions.setSelectedDebateNo(debateNo))
-    dispatch(GetDebateMessageList(debateNo))
+    dispatch(GetDebateMessageList({debateNo: debateNo, accessToken: state.accessToken}))
 
 
     if (client){
@@ -125,6 +131,7 @@ function initialLoad(dispatch: Dispatch<any>, location: any) {
         client.activate()
       })
     } else {
+
       window.WebSocketClient = websocketMap.connectWebsocket(() => {})
       client = window.WebSocketClient
       websocketMap.updateConfig(client, connectWebsocketCallback)

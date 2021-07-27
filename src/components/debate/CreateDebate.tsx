@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from "react";
-import {Box, Button, TextField, Typography} from "@material-ui/core";
+import {Box, Button, MenuItem, Select, TextField, Typography} from "@material-ui/core";
 import DebateStyle from '../../style/Debate.module.scss'
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -21,12 +21,14 @@ const CreateDebate = (props: CreateDebateProps) => {
   const classes = useStyle();
   const [form, setForm] = useState({
     debateName: "",
-    debateDescribe: ""
+    debateDescribe: "",
+    debateStatus: "PUBLIC"
   })
   const clearForm = () => {
     setForm({
       debateName: "",
-      debateDescribe: ""
+      debateDescribe: "",
+      debateStatus: "PUBLIC"
     })
   }
 
@@ -47,6 +49,13 @@ const CreateDebate = (props: CreateDebateProps) => {
       <div className={DebateStyle.createDebateWrap}>
         <Typography variant="h3" className={classes.inputTitle}>詳細</Typography>
         <TextField name="debateDescribe" color="primary" value={form.debateDescribe} onChange={changeFormHandler} />
+      </div>
+      <div className={DebateStyle.createDebateWrap}>
+        <Typography variant="h3" className={classes.inputTitle}>ルーム設定</Typography>
+        <Select name="debateStatus" value={form.debateStatus} onChange={changeFormHandler} >
+          <MenuItem value="PUBLIC">PUBLIC</MenuItem>
+          <MenuItem value="PRIVATE">PRIVATE</MenuItem>
+        </Select>
       </div>
       <Button variant="contained" color="primary" onClick={() => props.createDebateHandler(form, clearForm)}>登録</Button>
     </Box>
